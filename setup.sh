@@ -35,7 +35,7 @@ apt install -qq -y build-essential
 apt install -qq -y python3-dev
 apt install -qq -y ffmpeg
 apt install -qq -y aria2
-pip install --upgrade pip setuptools wheel faiss-gpu fairseq ffmpeg ffmpeg-python praat-parselmouth pyworld numpy==1.23.5 numba==0.56.4 librosa==0.9.2
+pip install --upgrade pip setuptools wheel faiss-gpu fairseq ffmpeg ffmpeg-python praat-parselmouth pyworld numpy==1.23.5 numba==0.56.4 librosa==0.9.2 tensorboard
 git clone -b pr-optimization --single-branch https://github.com/alexlnkp/Mangio-RVC-Tweaks.git
 mv /content/Mangio-RVC-Tweaks /content/Mangio-RVC-Fork
 git clone https://github.com/maxrmorrison/torchcrepe.git
