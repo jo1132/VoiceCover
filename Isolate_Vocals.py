@@ -13,7 +13,6 @@ os.makedirs('/content', exist_ok=True)
 os.chdir('/content')
 # ------------VSC REWRITE
 # pyright: reportMissingImports=false, reportUnusedVariable=warning, reportUntypedBaseClass=error
-from IPython.display import Audio, display
 #from google.colab import output
 #from google.colab import drive
 #from google.colab import files
@@ -161,9 +160,7 @@ if os.path.isdir('/content/VocalRemover5-COLAB_arch') == False:
     else:
         dlvr()
 
-if os.path.isdir('/content/VocalRemover5-COLAB_arch/separated'):
-    shutil.rmtree('/content/VocalRemover5-COLAB_arch/separated')
-    
+
 ###########################################
 ###################### DEFINE INFERENCE REQ
 ###########################################
@@ -421,14 +418,13 @@ print('TTA: {}'.format(settings_tta))
 print('Deep Extraction: {}'.format(settings_deepExtraction))
 print()
 
-shutil.rmtree('/content/VocalRemover5-COLAB_arch/separated')
 if useCustomArguments == False:
     os.system(f'python3.8 main.py -i "{input}" {convertAll} --useAllModel "{model_version}" --model_params "{parameter}" -P "{pretrained_model}" -w {window_size} -H "{high_end_process}" --aggressiveness {aggressiveness} -n "{nn_architecture}" -g {gpu} {deepExtraction} {isVocal} {suppress} {output_image} {postprocess} {tta}')
     if download and convertAll:
         sys.exit("No no, this is not an error but downloading with convertAll is not yet possible. Please DON'T report this to me (Hv) or the server")
     if download:
         dlFile(input,pretrained_model,isYouTube='https://' in input,export_as_mp3=export_as_mp3)
-else useCustomArguments:
+else:
     os.system(f'python3.8 main.py {CustomArguments}')
 print('Notebook took: {0:.{1}f}s'.format(time.time() - start_time, 1))
 
@@ -457,3 +453,4 @@ for i, file in enumerate(os.listdir(precessed_file_path)):
         zip_file.write(str(i)+'_Vocals.wav')
 zip_file.close()
 shutil.move(os.path.join(precessed_file_path, 'zipfile.zip'), os.path.join(save_path, 'zipfile.zip'))
+shutil.rmtree('/content/VocalRemover5-COLAB_arch/separated')
