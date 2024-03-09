@@ -2,8 +2,8 @@
 ###################### Data path define
 #########################################
 import Config
-config = Config()
-input = config.input
+config = Config.Isolate_Vocals_config()
+input = config.input_path
 
 ##########################################
 ###################### Setting Environment
@@ -66,11 +66,11 @@ def get_size(bytes, suffix='B'): # read ram
 
 def validateModelLinks():
     with hide_opt():
-        get_ipython().system('wget {} -O model_ver'.format(model_ver))
+        os.system('wget {} -O model_ver'.format(model_ver))
     model_ver_ = open("model_ver", "r")
     model_ver_ = model_ver_.read()
     with hide_opt():
-        get_ipython().system('wget {} -O model_list'.format(model_ver_))
+        os.system('wget {} -O model_list'.format(model_ver_))
     model_list = open("model_list", "r")
     model_list = model_list.readlines()
     models = []
@@ -82,7 +82,7 @@ def validateModelLinks():
 
 def installAI():
     print('Installing ai...', end=' ')
-    get_ipython().system('git clone {} VocalRemover5-COLAB_arch'.format(ai))
+    os.system('git clone {} VocalRemover5-COLAB_arch'.format(ai))
     os.chdir('VocalRemover5-COLAB_arch')
     print('done')
 
@@ -90,8 +90,8 @@ def installAI():
     for i in validateModelLinks():
         with hide_opt():
             zname = sanitize_filename(os.path.basename(i))
-            get_ipython().system("wget {}".format(i))
-            get_ipython().system('unzip -o {}'.format(zname))
+            os.system("wget {}".format(i))
+            os.system('unzip -o {}'.format(zname))
             os.remove(zname)
     print('done')
 
@@ -109,7 +109,7 @@ def check_update():
         os.chdir(f'{mounting_path}/VocalRemover5-COLAB_arch')
         print("Checking for updates...", end=" ")
         with hide_opt():
-            get_ipython().system('wget {} -O check_ver'.format(vercheck))
+            os.system('wget {} -O check_ver'.format(vercheck))
         f = open("check_ver", "r")
         nver = f.read()
         f = open("v", "r")
@@ -121,9 +121,9 @@ def check_update():
                 os.chdir('../')
                 print('Updating ai...',end=' ')
                 with hide_opt():
-                    get_ipython().system('git clone {} temp_VocalRemover5-COLAB_arch'.format(ai))
-                get_ipython().system('cp -a temp_VocalRemover5-COLAB_arch/* VocalRemover5-COLAB_arch/')
-                get_ipython().system('rm -rf temp_VocalRemover5-COLAB_arch')
+                    os.system('git clone {} temp_VocalRemover5-COLAB_arch'.format(ai))
+                os.system('cp -a temp_VocalRemover5-COLAB_arch/* VocalRemover5-COLAB_arch/')
+                os.system('rm -rf temp_VocalRemover5-COLAB_arch')
                 print('done')
 
                 print('Downloading models...', end=' ')
@@ -131,8 +131,8 @@ def check_update():
                 for i in validateModelLinks():
                     with hide_opt():
                         zname = sanitize_filename(os.path.basename(i))
-                        get_ipython().system("wget {}".format(i))
-                        get_ipython().system('unzip -o {}'.format(zname))
+                        os.system("wget {}".format(i))
+                        os.system('unzip -o {}'.format(zname))
                         os.remove(zname)
                 print('done')
                 output.clear()
@@ -200,7 +200,7 @@ def YouTube(link, dl=True):
 def zipdir(folder, zipname): # LINUX CALL MODIFIED!!!
     if '.zip' in zipname:
         zipname = zipname.strip('.zip')
-    get_ipython().system('zip -r {}.zip {}'.format(zipname,folder))
+    os.system('zip -r {}.zip {}'.format(zipname,folder))
 # dlFile(input,pretrained_model,isYouTube='http://' in input,export_as_mp3=export_as_mp3)
 def dlFile(track,pretrained_model,isYouTube=False,export_as_mp3=False):
     modelname = os.path.splitext(os.path.basename(pretrained_model))[0]
@@ -220,7 +220,7 @@ def dlFile(track,pretrained_model,isYouTube=False,export_as_mp3=False):
         for i in stems:
             wav_path = filename + i + '.wav'
             mp3_path = filename + i + '.mp3'
-            get_ipython().system(f'ffmpeg -y -i "{wav_path}" -vn -ar 44100 -ac 2 -b:a 320k "{mp3_path}" -loglevel quiet')
+            os.system(f'ffmpeg -y -i "{wav_path}" -vn -ar 44100 -ac 2 -b:a 320k "{mp3_path}" -loglevel quiet')
         os.chdir('../')
         for move in stems:
             shutil.move('separated/' + filename + move + '.mp3',filename)
@@ -228,7 +228,7 @@ def dlFile(track,pretrained_model,isYouTube=False,export_as_mp3=False):
         for move in stems:
             shutil.move('separated/' + filename + move + '.wav',filename)
     with hide_opt():
-        get_ipython().system(f'zip -r "{filename}.zip" "{filename}"')
+        os.system(f'zip -r "{filename}.zip" "{filename}"')
     shutil.rmtree(filename)
     files.download(f'{filename}.zip')
 
@@ -419,13 +419,13 @@ print('TTA: {}'.format(settings_tta))
 print('Deep Extraction: {}'.format(settings_deepExtraction))
 print()
 if useCustomArguments == False:
-    get_ipython().system(f'python3.8 main.py -i "{input}" {convertAll} --useAllModel "{model_version}" --model_params "{parameter}" -P "{pretrained_model}" -w {window_size} -H "{high_end_process}" --aggressiveness {aggressiveness} -n "{nn_architecture}" -g {gpu} {deepExtraction} {isVocal} {suppress} {output_image} {postprocess} {tta}')
+    os.system(f'python3.8 main.py -i "{input}" {convertAll} --useAllModel "{model_version}" --model_params "{parameter}" -P "{pretrained_model}" -w {window_size} -H "{high_end_process}" --aggressiveness {aggressiveness} -n "{nn_architecture}" -g {gpu} {deepExtraction} {isVocal} {suppress} {output_image} {postprocess} {tta}')
     if download and convertAll:
         sys.exit("No no, this is not an error but downloading with convertAll is not yet possible. Please DON'T report this to me (Hv) or the server")
     if download:
         dlFile(input,pretrained_model,isYouTube='https://' in input,export_as_mp3=export_as_mp3)
 if useCustomArguments:
-    get_ipython().system(f'python3.8 main.py {CustomArguments}')
+    os.system(f'python3.8 main.py {CustomArguments}')
 print('Notebook took: {0:.{1}f}s'.format(time.time() - start_time, 1))
 
 

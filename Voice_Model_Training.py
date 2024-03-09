@@ -3,7 +3,7 @@
 ###########################################
 
 import Config
-config = Config()
+config = Config.Voice_Model_Training_config()
 experiment_name = config.experiment_name #@param {type:"string"}
 print('experiment_name:', experiment_name)
 dataset = config.dataset  #@param {type:"string"}
@@ -420,10 +420,8 @@ with open(f"{exp_dir}/filelist.txt", "w") as f:
   f.write("\n".join(opt))
 print("Mute filelist written. Best of luck training!")
 
-
+os.chdir('/content/Mangio-RVC-Fork')
+os.system(cmd)
 os.system("cd /content/Mangio-RVC-Fork")
 os.system("load_ext tensorboard")
 os.system("tensorboard --logdir /content/Mangio-RVC-Fork/logs")
-
-os.chdir('/content/Mangio-RVC-Fork')
-os.system(cmd)
