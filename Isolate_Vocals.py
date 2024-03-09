@@ -161,7 +161,9 @@ if os.path.isdir('/content/VocalRemover5-COLAB_arch') == False:
     else:
         dlvr()
 
-
+if os.path.isdir('/content/VocalRemover5-COLAB_arch/separated'):
+    shutil.rmtree('/content/VocalRemover5-COLAB_arch/separated')
+    
 ###########################################
 ###################### DEFINE INFERENCE REQ
 ###########################################
@@ -418,13 +420,15 @@ print('High end process: {}'.format(high_end_process))
 print('TTA: {}'.format(settings_tta))
 print('Deep Extraction: {}'.format(settings_deepExtraction))
 print()
+
+shutil.rmtree('/content/VocalRemover5-COLAB_arch/separated')
 if useCustomArguments == False:
     os.system(f'python3.8 main.py -i "{input}" {convertAll} --useAllModel "{model_version}" --model_params "{parameter}" -P "{pretrained_model}" -w {window_size} -H "{high_end_process}" --aggressiveness {aggressiveness} -n "{nn_architecture}" -g {gpu} {deepExtraction} {isVocal} {suppress} {output_image} {postprocess} {tta}')
     if download and convertAll:
         sys.exit("No no, this is not an error but downloading with convertAll is not yet possible. Please DON'T report this to me (Hv) or the server")
     if download:
         dlFile(input,pretrained_model,isYouTube='https://' in input,export_as_mp3=export_as_mp3)
-if useCustomArguments:
+else useCustomArguments:
     os.system(f'python3.8 main.py {CustomArguments}')
 print('Notebook took: {0:.{1}f}s'.format(time.time() - start_time, 1))
 
