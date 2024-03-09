@@ -430,6 +430,40 @@ print('Notebook took: {0:.{1}f}s'.format(time.time() - start_time, 1))
 
 
 ############################################
+######################### Data Argumentation
+############################################
+from pydub import AudioSegment
+
+def change_pitch(input_file, output_file):
+    # WAV 파일 불러오기
+    sound = AudioSegment.from_wav(input_file)
+
+    # 피치 2배로 변경
+    new_sound = sound.speedup(playback_speed=1.1)
+
+    # 변경된 파일 저장
+    new_sound.export(output_file, format="wav")
+
+def get_wav_duration(file_path):
+    # WAV 파일 불러오기
+    sound = AudioSegment.from_wav(file_path)
+
+    # 길이 계산 (밀리초 단위)
+    duration_in_milliseconds = len(sound)
+
+    # 밀리초를 초로 변환
+    duration_in_seconds = duration_in_milliseconds / 1000
+    return duration_in_seconds
+
+processed_file_path = '/content/VocalRemover5-COLAB_arch/separated'
+for i, file in enumerate(os.listdir(processed_file_path)):
+    if 'Vocals.wav' in file:
+        temp_file_path = os.path.join(processed_file_path, file)
+        minit = get_wav_duration(temp_file_path) // 60
+        if minit < 10:
+            change_pitch(temp_file_path, os.path.join(processed_file_path, 'speedup_'+file))
+
+############################################
 ###################### Make Zipfile and Move
 ############################################
 import os
@@ -439,7 +473,6 @@ import zipfile
 import shutil
 
 save_path = '/content/dataset/'
-
 if not os.path.isdir(save_path):
     os.makedirs(save_path)
 

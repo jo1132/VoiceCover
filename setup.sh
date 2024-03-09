@@ -28,6 +28,7 @@ pip install samplerate==0.1.0
 pip install git+https://github.com/ytdl-org/ytdl-nightly.git@2023.08.07
 pip install opencv-python
 pip install pathvalidate
+pip install pydub
 
 # Training Voicemodel
 cd /content
