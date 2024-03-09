@@ -2,7 +2,7 @@ import torch
 
 class Isolate_Vocals_config:
     def __init__(self):
-        self.input_path = 'https://www.youtube.com/watch?v=6RQ-bBdASvk'
+        self.input_path = 'https://www.youtube.com/watch?v=nSzwuS-mvkk'
         self.pretrained_model = "HP2-4BAND-3090_4band_arch-500m_1.pth"
         self.window_size =  512
         self.parameter = "Auto detect"

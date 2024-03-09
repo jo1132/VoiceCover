@@ -460,7 +460,9 @@ for i, file in enumerate(os.listdir(processed_file_path)):
     if 'Vocals.wav' in file:
         temp_file_path = os.path.join(processed_file_path, file)
         minit = get_wav_duration(temp_file_path) // 60
+        print('음원 전체 시간:', minit)
         if minit < 10:
+            print('데이터 증강을 시작합니다.')
             change_pitch(temp_file_path, os.path.join(processed_file_path, 'speedup_'+file))
 
 ############################################
@@ -486,4 +488,4 @@ for i, file in enumerate(os.listdir(precessed_file_path)):
         zip_file.write(str(i)+'_Vocals.wav')
 zip_file.close()
 shutil.move(os.path.join(precessed_file_path, 'zipfile.zip'), os.path.join(save_path, 'zipfile.zip'))
-shutil.rmtree('/content/VocalRemover5-COLAB_arch/separated')
+#shutil.rmtree('/content/VocalRemover5-COLAB_arch/separated')
