@@ -460,7 +460,7 @@ for i, file in enumerate(os.listdir(processed_file_path)):
     if 'Vocals.wav' in file:
         temp_file_path = os.path.join(processed_file_path, file)
         print(temp_file_path)
-        minit = get_wav_duration(temp_file_path) // 60
+        minit += get_wav_duration(temp_file_path) // 60
         
         if config.data_augmentation_speedup:
             print('데이터 증강을 시작합니다. (1.1배속)')
@@ -471,8 +471,8 @@ for i, file in enumerate(os.listdir(processed_file_path)):
         if config.data_augmentation_slowdown:
             print('데이터 증강을 시작합니다. (0.9배속)')
             speedup_path = os.path.join(processed_file_path, 'slowdown_'+file)
-            change_pitch(temp_file_path, speedup_path. 0.9)
-            minit = get_wav_duration(speedup_path) // 60
+            change_pitch(temp_file_path, speedup_path, 0.9)
+            minit += get_wav_duration(speedup_path) // 60
         
         print('음원 전체 시간:', minit)
 

@@ -40,7 +40,7 @@ class Voice_Model_Training_config:
         self.crepe_hop_length = 64 #@param {type:"integer"}
         self.pitch_guidance = True #@param {type:"boolean"}
         self.save_frequency = 10 #@param {type:"integer"}
-        self.total_epochs = 500 #@param {type:"integer"}
+        self.total_epochs = 100 #@param {type:"integer"}
         self.batch_size = 8 #@param {type:"integer"}
         self.save_only_latest_ckpt = True #@param {type:"boolean"}
         self.cache_all_training_sets = False #@param {type:"boolean"}
