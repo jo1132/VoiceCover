@@ -1,6 +1,8 @@
 ###########################################
 ###################### Setting Current Path
 ###########################################
+import time
+start_time = time.time()
 
 import Config
 config = Config.Voice_Model_Training_config()
@@ -425,3 +427,5 @@ os.system(cmd)
 #os.system("cd /content/Mangio-RVC-Fork")
 #os.system("load_ext tensorboard")
 #os.system("tensorboard --logdir /content/Mangio-RVC-Fork/logs")
+
+print('total processtime:', round(time.time() - start_time, 2))

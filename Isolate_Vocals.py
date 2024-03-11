@@ -31,6 +31,8 @@ import torch
 from pathvalidate import sanitize_filename # for inference cell
 import yt_dlp as youtube_dl # for inference cell
 
+start_time = time.time()
+
 isCPU = torch.cuda.is_available()
 #@markdown Uncheck if you want to use VocalRemover5 without mounting to drive.
 MountDrive = False #@param{type:"boolean"}
@@ -434,12 +436,24 @@ print('Notebook took: {0:.{1}f}s'.format(time.time() - start_time, 1))
 ############################################
 from pydub import AudioSegment
 
-def change_pitch(input_file, output_file, speed):
+def SpeedUp_pitch(input_file, output_file, speed):
     # WAV 파일 불러오기
     sound = AudioSegment.from_wav(input_file)
 
     # 피치 2배로 변경
     new_sound = sound.speedup(playback_speed=speed)
+
+    # 변경된 파일 저장
+    new_sound.export(output_file, format="wav")
+
+def SlowDown_pitch(input_file, output_file, speed):
+    # WAV 파일 불러오기
+    sound = AudioSegment.from_wav(input_file)
+
+    # 피치 0.9배로 변경
+    new_sound = sound._spawn(sound.raw_data, overrides={
+        "frame_rate": int(sound.frame_rate * speed)
+    })
 
     # 변경된 파일 저장
     new_sound.export(output_file, format="wav")
@@ -460,19 +474,19 @@ for i, file in enumerate(os.listdir(processed_file_path)):
     if 'Vocals.wav' in file:
         temp_file_path = os.path.join(processed_file_path, file)
         print(temp_file_path)
-        minit += get_wav_duration(temp_file_path) // 60
+        minit = get_wav_duration(temp_file_path) // 60
         
         if config.data_augmentation_speedup:
             print('데이터 증강을 시작합니다. (1.1배속)')
             speedup_path = os.path.join(processed_file_path, 'speedup_'+file)
-            change_pitch(temp_file_path, speedup_path, 1.1)
-            minit = get_wav_duration(speedup_path) // 60
+            SpeedUp_pitch(temp_file_path, speedup_path, 1.1)
+            minit += get_wav_duration(speedup_path) // 60
 
         if config.data_augmentation_slowdown:
             print('데이터 증강을 시작합니다. (0.9배속)')
-            speedup_path = os.path.join(processed_file_path, 'slowdown_'+file)
-            change_pitch(temp_file_path, speedup_path, 0.9)
-            minit += get_wav_duration(speedup_path) // 60
+            slowdown_path = os.path.join(processed_file_path, 'slowdown_'+file)
+            SlowDown_pitch(temp_file_path, slowdown_path, 0.95)
+            minit += get_wav_duration(slowdown_path) // 60
         
         print('음원 전체 시간:', minit)
 
@@ -500,3 +514,5 @@ for i, file in enumerate(os.listdir(precessed_file_path)):
 zip_file.close()
 shutil.move(os.path.join(precessed_file_path, 'zipfile.zip'), os.path.join(save_path, 'zipfile.zip'))
 #shutil.rmtree('/content/VocalRemover5-COLAB_arch/separated')
+
+print('total process time:', round(time.time()-start_time, 2))
