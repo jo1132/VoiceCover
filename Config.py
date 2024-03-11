@@ -22,6 +22,9 @@ class Isolate_Vocals_config:
         self.download = False
         self.export_as_mp3 = False
 
+        self.data_augmentation_speedup = True
+        self.data_augmentation_slowdown = True
+
 
 class Voice_Model_Training_config:
     def __init__(self):

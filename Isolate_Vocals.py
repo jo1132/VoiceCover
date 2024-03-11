@@ -434,12 +434,12 @@ print('Notebook took: {0:.{1}f}s'.format(time.time() - start_time, 1))
 ############################################
 from pydub import AudioSegment
 
-def change_pitch(input_file, output_file):
+def change_pitch(input_file, output_file, speed):
     # WAV 파일 불러오기
     sound = AudioSegment.from_wav(input_file)
 
     # 피치 2배로 변경
-    new_sound = sound.speedup(playback_speed=1.1)
+    new_sound = sound.speedup(playback_speed=speed)
 
     # 변경된 파일 저장
     new_sound.export(output_file, format="wav")
@@ -459,11 +459,22 @@ processed_file_path = '/content/VocalRemover5-COLAB_arch/separated'
 for i, file in enumerate(os.listdir(processed_file_path)):
     if 'Vocals.wav' in file:
         temp_file_path = os.path.join(processed_file_path, file)
+        print(temp_file_path)
         minit = get_wav_duration(temp_file_path) // 60
+        
+        if config.data_augmentation_speedup:
+            print('데이터 증강을 시작합니다. (1.1배속)')
+            speedup_path = os.path.join(processed_file_path, 'speedup_'+file)
+            change_pitch(temp_file_path, speedup_path, 1.1)
+            minit = get_wav_duration(speedup_path) // 60
+
+        if config.data_augmentation_slowdown:
+            print('데이터 증강을 시작합니다. (0.9배속)')
+            speedup_path = os.path.join(processed_file_path, 'slowdown_'+file)
+            change_pitch(temp_file_path, speedup_path. 0.9)
+            minit = get_wav_duration(speedup_path) // 60
+        
         print('음원 전체 시간:', minit)
-        if minit < 10:
-            print('데이터 증강을 시작합니다.')
-            change_pitch(temp_file_path, os.path.join(processed_file_path, 'speedup_'+file))
 
 ############################################
 ###################### Make Zipfile and Move
