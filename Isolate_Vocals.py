@@ -246,7 +246,7 @@ if os.path.isfile('main.py') == False:
 
 ScanSeparatedFolder = False #@param {type:"boolean"}
 #@markdown Convert all files in your tracks folder
-convertAll = True #@param {type:"boolean"}
+convertAll = config.convertAll #@param {type:"boolean"}
 if convertAll:
     convertAll = '--convert_all'
 else:
