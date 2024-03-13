@@ -246,7 +246,7 @@ if os.path.isfile('main.py') == False:
 
 ScanSeparatedFolder = False #@param {type:"boolean"}
 #@markdown Convert all files in your tracks folder
-convertAll = False #@param {type:"boolean"}
+convertAll = True #@param {type:"boolean"}
 if convertAll:
     convertAll = '--convert_all'
 else:
@@ -470,25 +470,26 @@ def get_wav_duration(file_path):
     return duration_in_seconds
 
 processed_file_path = '/content/VocalRemover5-COLAB_arch/separated'
+sec = 0
 for i, file in enumerate(os.listdir(processed_file_path)):
     if 'Vocals.wav' in file:
         temp_file_path = os.path.join(processed_file_path, file)
         print(temp_file_path)
-        minit = get_wav_duration(temp_file_path) // 60
+        sec += get_wav_duration(temp_file_path)
         
         if config.data_augmentation_speedup:
             print('데이터 증강을 시작합니다. (1.1배속)')
             speedup_path = os.path.join(processed_file_path, 'speedup_'+file)
             SpeedUp_pitch(temp_file_path, speedup_path, 1.1)
-            minit += get_wav_duration(speedup_path) // 60
+            sec += get_wav_duration(speedup_path)
 
         if config.data_augmentation_slowdown:
             print('데이터 증강을 시작합니다. (0.9배속)')
             slowdown_path = os.path.join(processed_file_path, 'slowdown_'+file)
             SlowDown_pitch(temp_file_path, slowdown_path, 0.95)
-            minit += get_wav_duration(slowdown_path) // 60
+            sec += get_wav_duration(slowdown_path)
         
-        print('음원 전체 시간:', minit)
+        print('음원 전체 시간:', round(sec))
 
 ############################################
 ###################### Make Zipfile and Move
@@ -504,15 +505,20 @@ if not os.path.isdir(save_path):
     os.makedirs(save_path)
 
 os.chdir('/content/VocalRemover5-COLAB_arch/separated')
-precessed_file_path = os.getcwd()
+processed_file_path = os.getcwd()
 zip_file = zipfile.ZipFile('zipfile.zip', 'w')
 
-for i, file in enumerate(os.listdir(precessed_file_path)):
+for i, file in enumerate(os.listdir(processed_file_path)):
     if 'Vocals.wav' in file:
-        shutil.move(os.path.join(precessed_file_path, file), os.path.join(precessed_file_path, str(i)+'_Vocals.wav'))
-        zip_file.write(str(i)+'_Vocals.wav')
+        file_nospace = file.replace(' ', '')
+        shutil.move(os.path.join(processed_file_path, file), os.path.join(processed_file_path, file_nospace))
+        zip_file.write(file_nospace)
 zip_file.close()
-shutil.move(os.path.join(precessed_file_path, 'zipfile.zip'), os.path.join(save_path, 'zipfile.zip'))
-#shutil.rmtree('/content/VocalRemover5-COLAB_arch/separated')
+shutil.move(os.path.join(processed_file_path, 'zipfile.zip'), os.path.join(save_path, 'zipfile.zip'))
+
+## rm files in separated folder
+for i, file in enumerate(os.listdir(processed_file_path)):
+    if 'Vocals.wav' in file:
+        os.remove(os.path.join(processed_file_path, file))
 
 print('total process time:', round(time.time()-start_time, 2))
