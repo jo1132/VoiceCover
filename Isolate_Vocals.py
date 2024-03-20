@@ -33,6 +33,19 @@ import yt_dlp as youtube_dl # for inference cell
 
 start_time = time.time()
 
+##########################################
+###################### Setting Environment
+##########################################
+if os.path.isdir('/content/VocalRemover5-COLAB_arch/separated'):
+    print('separated 폴더를 정리합니다.')
+    folder_path = '/content/VocalRemover5-COLAB_arch/separated'
+    for file in os.listdir(folder_path):
+        os.remove(os.path.join(folder_path, file))
+##########################################
+###################### Setting Environment
+##########################################
+
+
 isCPU = torch.cuda.is_available()
 #@markdown Uncheck if you want to use VocalRemover5 without mounting to drive.
 MountDrive = False #@param{type:"boolean"}
